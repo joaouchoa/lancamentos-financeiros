@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.6.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="dbup-postgresql" Version="5.0.37" />
+    <PackageReference Include="FluentAssertions" Version="6.12.2" />
+    <PackageReference Include="MassTransit" Version="8.5.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="Testcontainers.PostgreSql" Version="3.10.0" />
+    <PackageReference Include="Testcontainers.RabbitMq" Version="3.10.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Consolidacao.Api\Consolidacao.Api.csproj" />
+    <ProjectReference Include="..\..\src\Consolidacao.Domain\Consolidacao.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Consolidacao.Infrastructure\Consolidacao.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Shared.Contracts\Shared.Contracts.csproj" />
+  </ItemGroup>
+
+  <!-- Scripts SQL do DbUp linkados como embedded resources -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\src\Consolidacao.Infrastructure.Migrations\Scripts\*.sql" Link="Scripts\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

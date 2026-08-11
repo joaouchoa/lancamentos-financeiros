@@ -1,0 +1,6 @@
+using MediatR;
+
+namespace Lancamentos.Application.Common.Mediator;
+
+public interface ICommandHandler<TCommand, TResponse> : IRequestHandler<TCommand, TResponse>
+    where TCommand : ICommand<TResponse>;

@@ -1,0 +1,97 @@
+services:
+
+  # ── Banco de dados (um container, dois databases lógicos) ──────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/postgres-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Mensageria ───────────────────────────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Migrations (rodam uma vez e encerram) ─────────────────────────────────────
+  lancamentos-migrations:
+    build:
+      context: .
+      dockerfile: src/Lancamentos.Infrastructure.Migrations/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_CONN: "Host=postgres;Port=5432;Database=lancamentos;Username=postgres;Password=postgres"
+
+  consolidacao-migrations:
+    build:
+      context: .
+      dockerfile: src/Consolidacao.Infrastructure.Migrations/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_CONN: "Host=postgres;Port=5432;Database=consolidacao;Username=postgres;Password=postgres"
+
+  # ── APIs ───────────────────────────────────────────────────────────────────────
+  # Não depende do RabbitMQ estar saudável para subir — o outbox acumula e drena
+  # sozinho quando o broker fica disponível, então a API de Lançamentos nunca
+  # fica bloqueada por uma falha na mensageria ou na Consolidação.
+  lancamentos-api:
+    build:
+      context: .
+      dockerfile: src/Lancamentos.Api/Dockerfile
+    depends_on:
+      lancamentos-migrations:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_started
+    ports:
+      - "5127:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=lancamentos;Username=postgres;Password=postgres"
+      RabbitMq__Host: rabbitmq
+      RabbitMq__Username: guest
+      RabbitMq__Password: guest
+
+  consolidacao-api:
+    build:
+      context: .
+      dockerfile: src/Consolidacao.Api/Dockerfile
+    depends_on:
+      consolidacao-migrations:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_started
+    ports:
+      - "5227:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=consolidacao;Username=postgres;Password=postgres"
+      RabbitMq__Host: rabbitmq
+      RabbitMq__Username: guest
+      RabbitMq__Password: guest
+
+volumes:
+  postgres_data:

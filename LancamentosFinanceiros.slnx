@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Shared.Contracts/Shared.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Lancamentos/">
+    <Project Path="src/Lancamentos.Domain/Lancamentos.Domain.csproj" />
+    <Project Path="src/Lancamentos.Application/Lancamentos.Application.csproj" />
+    <Project Path="src/Lancamentos.Infrastructure/Lancamentos.Infrastructure.csproj" />
+    <Project Path="src/Lancamentos.Infrastructure.Migrations/Lancamentos.Infrastructure.Migrations.csproj" />
+    <Project Path="src/Lancamentos.Api/Lancamentos.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Consolidacao/">
+    <Project Path="src/Consolidacao.Domain/Consolidacao.Domain.csproj" />
+    <Project Path="src/Consolidacao.Application/Consolidacao.Application.csproj" />
+    <Project Path="src/Consolidacao.Infrastructure/Consolidacao.Infrastructure.csproj" />
+    <Project Path="src/Consolidacao.Infrastructure.Migrations/Consolidacao.Infrastructure.Migrations.csproj" />
+    <Project Path="src/Consolidacao.Api/Consolidacao.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/Lancamentos/">
+    <Project Path="tests/Lancamentos.Domain.Tests/Lancamentos.Domain.Tests.csproj" />
+    <Project Path="tests/Lancamentos.Application.Tests/Lancamentos.Application.Tests.csproj" />
+    <Project Path="tests/Lancamentos.Integration.Tests/Lancamentos.Integration.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Consolidacao/">
+    <Project Path="tests/Consolidacao.Domain.Tests/Consolidacao.Domain.Tests.csproj" />
+    <Project Path="tests/Consolidacao.Application.Tests/Consolidacao.Application.Tests.csproj" />
+    <Project Path="tests/Consolidacao.Integration.Tests/Consolidacao.Integration.Tests.csproj" />
+  </Folder>
+</Solution>
