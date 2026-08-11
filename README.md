@@ -150,8 +150,6 @@ flowchart LR
     B4 -- não --> E["fila consolidacao-lancamento-registrado_error"]
 ```
 
-> Diagramas renderizados nativamente pelo GitHub. Uma versão navegável e com mais contexto está disponível em [claude.ai/code/artifact/ffd722e5-1365-44d8-b6d0-d744c21b719f](https://claude.ai/code/artifact/ffd722e5-1365-44d8-b6d0-d744c21b719f), e a topologia real do RabbitMQ por trás deles está documentada em `docs/masstransit-por-dentro.md`.
-
 ---
 
 ## Como executar
